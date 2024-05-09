@@ -3,30 +3,62 @@ import "./style.css";
 
 export default function App() {
   const [newItem, setNewItem] = useState("");
-  //setNewItem("newItem");
+  const [todos, setTodos] = useState([]);
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    setTodos((currentTodos) => {
+      return [
+        ...todos,
+        { id: crypto.randomUUID(), title: newItem, completed: false },
+      ];
+    });
+    setNewItem("");
+  }
+
+  function toggleTodo(id, completed) {
+    setTodos(currentTodos => {
+      return currentTodos.map(todo => {
+        if (todo.id === id) {
+          return { ...todo, completed }
+        }
+
+        return todo
+      })
+    })
+  }
+  console.log(todos);
+
   return (
     <>
-      <form clasName="new-item-form">
+      <form onSubmit={handleSubmit} className="new-item-form">
         <div className="form-row">
           <label htmlFor="item">New Item</label>
-          <input type="text" id="item"></input>
+          <input
+            value={newItem}
+            onChange={(e) => setNewItem(e.target.value)}
+            type="text"
+            id="item"
+          ></input>
         </div>
         <button className="btn">Add</button>
       </form>
-      <h1 ckassName="header">Todo List</h1>
+      <h1 className="header">Todo List</h1>
       <ul className="list">
-        <li>
-          <label>
-            <input type="checkbox" />
-            Item 1
-          </label>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox" />
-            Item 2
-          </label>
-        </li>
+        {todos.map((todo) => {
+          return (
+            <li key={todo.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={(e) => toggleTodo(todo.id, e.target.checked)}
+                />
+                {todo.title}
+              </label>
+            </li>
+          );
+        })}
       </ul>
     </>
   );
