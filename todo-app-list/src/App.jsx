@@ -27,8 +27,14 @@ export default function App() {
       })
     })
   }
-  console.log(todos);
+  
 
+  function deleteTodo(id) {
+    setTodos(currentTodos => {
+      return currentTodos.filter(todo => todo.id !== id)
+    })
+  }
+  console.log(todos);
   return (
     <>
       <form onSubmit={handleSubmit} className="new-item-form">
@@ -56,6 +62,7 @@ export default function App() {
                 />
                 {todo.title}
               </label>
+              <button onClick={() => deleteTodo(todo.id)} className="btn btn-danger">Delete</button>
             </li>
           );
         })}
