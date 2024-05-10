@@ -1,54 +1,37 @@
 import { useState } from "react";
 import "./style.css";
+import { NewTodoForm } from "./NewTodoForm";
 
 export default function App() {
-  const [newItem, setNewItem] = useState("");
   const [todos, setTodos] = useState([]);
-  function handleSubmit(e) {
-    e.preventDefault();
 
+  function addTodo(title) {
     setTodos((currentTodos) => {
-      return [
-        ...todos,
-        { id: crypto.randomUUID(), title: newItem, completed: false },
-      ];
+      return [...todos, { id: crypto.randomUUID(), title, completed: false }];
     });
-    setNewItem("");
   }
 
   function toggleTodo(id, completed) {
-    setTodos(currentTodos => {
-      return currentTodos.map(todo => {
+    setTodos((currentTodos) => {
+      return currentTodos.map((todo) => {
         if (todo.id === id) {
-          return { ...todo, completed }
+          return { ...todo, completed };
         }
 
-        return todo
-      })
-    })
+        return todo;
+      });
+    });
   }
-  
 
   function deleteTodo(id) {
-    setTodos(currentTodos => {
-      return currentTodos.filter(todo => todo.id !== id)
-    })
+    setTodos((currentTodos) => {
+      return currentTodos.filter((todo) => todo.id !== id);
+    });
   }
   console.log(todos);
   return (
     <>
-      <form onSubmit={handleSubmit} className="new-item-form">
-        <div className="form-row">
-          <label htmlFor="item">New Item</label>
-          <input
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
-            type="text"
-            id="item"
-          ></input>
-        </div>
-        <button className="btn">Add</button>
-      </form>
+      <NewTodoForm onSubmit={addTodo} />
       <h1 className="header">Todo List</h1>
       <ul className="list">
         {todos.length === 0 && "No Todos"}
@@ -63,7 +46,12 @@ export default function App() {
                 />
                 {todo.title}
               </label>
-              <button onClick={() => deleteTodo(todo.id)} className="btn btn-danger">Delete</button>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="btn btn-danger"
+              >
+                Delete
+              </button>
             </li>
           );
         })}
